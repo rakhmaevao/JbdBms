@@ -1,0 +1,39 @@
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+JbdBms	KEYWORD1
+tm1637	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+readBmsData	KEYWORD2
+getChargePercentage	KEYWORD2
+getCurrent	KEYWORD2
+getProtectionState	KEYWORD2
+
+#######################################
+# Instances (KEYWORD2)
+#######################################
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+BMS_STATUS_OK LITERAL1
+BMS_STATUS_CELL_OVP LITERAL1
+BMS_STATUS_CELL_UVP LITERAL1
+BMS_STATUS_PACK_OVP LITERAL1
+BMS_STATUS_PACK_UVP LITERAL1
+BMS_STATUS_CHG_OTP  LITERAL1
+BMS_STATUS_CHG_UTP  LITERAL1
+BMS_STATUS_DSG_OTP  LITERAL1
+BMS_STATUS_DSG_UTP  LITERAL1
+BMS_STATUS_CHG_OCP  LITERAL1
+BMS_STATUS_DSG_OCP  LITERAL1
+BMS_STATUS_SHORT_CIRCOUT  LITERAL1
+BMS_STATUS_AFE_ERROR  LITERAL1
+BMS_STATUS_SOFT_LOCK  LITERAL1
+BMS_STATUS_CHGOVERTIME  LITERAL1
+BMS_STATUS_DSGOVERTIME	LITERAL1
+BMS_POWER_OFF_ERRORS  LITERAL1
