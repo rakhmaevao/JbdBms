@@ -1,13 +1,16 @@
-#include "JbdBms.hpp"
+#include <SoftwareSerial.h>
 
-JbdBms myBms;
+#include "JbdBms.h"
+
+//JbdBms myBms(&Serial2);
+//SoftwareSerial mySerial(10, 11);
+//JbdBms myBms(&mySerial); //RX, TX SoftwareSerial
+JbdBms myBms(10, 11);
 
 void setup()
 {
   Serial.begin(115200);
   Serial.println("JBD bms driver");
-
-  myBms.begin(9600, 16,17); //Speed, RX, TX
 }
 
 void loop()

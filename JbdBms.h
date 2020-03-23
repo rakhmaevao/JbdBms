@@ -9,7 +9,7 @@
 #define JBD_BMS_HPP_
 
 #include "Arduino.h"
-//#include <SoftwareSerial.h>
+#include <SoftwareSerial.h>
 
 #define BMS_LEN_RESPONCE 34
 /* \defgroup BMS_STATUS BMS protection status masks
@@ -57,7 +57,9 @@ typedef struct packCellInfoStruct{
 */
 class JbdBms {
 public:
-  void begin(int spd, int rx,int tx);
+  JbdBms(HardwareSerial * t_hardwareSerial);
+  JbdBms(SoftwareSerial * t_softwareSerial);
+  JbdBms(int rx, int tx);
 
   bool readBmsData();
   bool readPackData();
@@ -73,7 +75,8 @@ public:
   packCellInfoStruct getPackCellInfo();
 
 private:
-  //SoftwareSerial m_serial;
+  Stream * m_port;
+  bool m_hwserial;
   float m_voltage = 0;
   float m_current = 0;
   float m_chargePercentage = 0;
@@ -82,7 +85,7 @@ private:
   float m_Temp1 = 0;
   float m_Temp2 = 0;
 
-  packCellInfoStruct m_packCellInfo;
+  packCellInfoStruct m_packCellInfo = {0};
 
   void sendReqBasicMessage();
   void parseReqBasicMessage(uint8_t * t_message);

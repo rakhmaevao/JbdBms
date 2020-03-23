@@ -5,19 +5,27 @@
  * \date September 2019
  */
 
-#include "jbdBms.h"
+#include "JbdBms.h"
 
-// void JbdBms::begin(int spd, int rx,int tx) {
-//   //m_serial.begin(9600);
-//   Serial2.begin(spd, SERIAL_8N1, rx, tx);
-// }
 
-JbdBms::JbdBms(Stream * serial){
-  m_serial = serial;
+JbdBms::JbdBms(HardwareSerial * t_hardwareSerial){
+  m_port = t_hardwareSerial;
+  m_hwserial = true;
+  static_cast<HardwareSerial*>(m_port)->begin(9600);
 }
 
-void JbdBms::begin() {
-  m_serial->begin(9600);
+
+JbdBms::JbdBms(SoftwareSerial * t_softwareSerial){
+  m_port = t_softwareSerial;
+  m_hwserial = false;
+  static_cast<SoftwareSerial*>(m_port)->begin(9600);
+}
+
+JbdBms::JbdBms(int rx, int tx){
+  SoftwareSerial mySerial(rx, tx);
+  m_port = &mySerial;
+  m_hwserial = false;
+  static_cast<SoftwareSerial*>(m_port)->begin(9600);
 }
 
 /*!
@@ -95,14 +103,12 @@ packCellInfoStruct JbdBms::getPackCellInfo() {
 
 void JbdBms::sendReqBasicMessage() {
   uint8_t reqMessage[] = { 0xDD, 0xA5, 0x03, 0x00, 0xFF, 0xFD, 0x77 };
-  m_serial->write(reqMessage, 7);
-  // Serial2.write(reqMessage, 7);
+  m_port->write(reqMessage, 7);
 }
 
 void JbdBms::sendCellMessage() {
   uint8_t reqMessage[] = { 0xDD, 0xA5, 0x04, 0x00, 0xFF, 0xFC, 0x77 };
-  m_serial.write(reqMessage, 7);
-  // Serial2.write(reqMessage, 7);
+  m_port->write(reqMessage, 7);
 }
 
 void JbdBms::parseReqBasicMessage(uint8_t * t_message) {
@@ -156,9 +162,9 @@ bool JbdBms::readResponce(uint8_t * t_outMessage) {
     {
       return false;
     }
-    if (m_serial->available() > 0) {
+    if (m_port->available() > 0) {
     // if (Serial2.available() > 0) {
-      uint8_t thisByte = m_serial->read();
+      uint8_t thisByte = m_port->read();
       // uint8_t thisByte = Serial2.read();
       if (thisByte == 0xDD)
       {
