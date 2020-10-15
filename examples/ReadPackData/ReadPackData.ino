@@ -2,9 +2,10 @@
 
 #include "JbdBms.h"
 
-//JbdBms myBms(&Serial2);
-//SoftwareSerial mySerial(10, 11);
-//JbdBms myBms(&mySerial); //RX, TX SoftwareSerial
+// Initialization examples
+// JbdBms myBms(&Serial2);
+// SoftwareSerial mySerial(10, 11);
+// JbdBms myBms(&mySerial); //RX, TX SoftwareSerial
 JbdBms myBms(10, 11);
 
 void setup()
