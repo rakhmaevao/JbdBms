@@ -1,6 +1,7 @@
-# JbdBms library for Arduino
+# JbdBms library for Arduino v0.2
 
 This is a library for working with battery manager system JBD.
+If you can configure your BMS trough the JBDTool, then this code will suit you.
 See [my project in hack a day](https://hackaday.io/project/162806-jbd-bms-protocol).
 
 ## Hardware
@@ -8,7 +9,7 @@ See [my project in hack a day](https://hackaday.io/project/162806-jbd-bms-protoc
 Connect UART pins to an Arduino board DIGITAL pins:
 * RX
 * TX
-* GND (Ground)
+* GND
 
 Attention! UART GND circuit is electrically isolated from the power GND BMS.
 
@@ -26,7 +27,7 @@ void setup()
   myBms.begin();
 }
 ```
-### Reading data from BMS
+### Reading basic data from BMS
 
 ```c++
 if (myBms.readBmsData()== true)
@@ -37,22 +38,22 @@ if (myBms.readBmsData()== true)
 After calling `readBmsData ()` request is sent to the BMS.
 In case of a successful read response, the method returns `true`.
 
-You can work with the data obtained using the get-functions.
+You can work with the data obtained using the get-functions: getChargePercentage(), getCurrent(), getProtectionState().
 
 ### Get-functions
-### Charge percentage
+#### Charge percentage
 ```c++
 myBms.getChargePercentage();
 ```
 This method return the float value.
 
-### Consumption current
+#### Consumption current
 ```c++
 myBms.getCurrent();
 ```
 This method return the float value.
 
-### Protection state
+#### Protection state
 ```c++
 myBms.getProtectionState();
 ```
@@ -79,3 +80,49 @@ If this value is not 0, then BMS detected some errors. You can check this value 
 #define BMS_POWER_OFF_ERRORS		0x46CA
 ```
 Some errors lead to power down (labeled "Power off"). If you want to read them a device that is powered from the battery, it will not work.
+
+### Cycle counter
+```c++
+int cycleCount = myBms.getCycle();
+```
+This method return the integer value.
+
+### Data from temperature sensors
+Depending on your BMS, the sensor can be located either on the board or be external.
+Find it out empirically.
+```c++
+float temp1 = myBms.getTemp1();
+float temp2 = myBms.getTemp2();
+```
+
+### Reading voltage on the cells
+
+```c++
+if (myBms.readPackData()== true)
+{
+  // use the get-functions
+}
+```
+After calling `readPackData ()` request is sent to the BMS.
+In case of a successful read response, the method returns `true`.
+
+You can work with the data obtained using the get-function getPackCellInfo().
+
+#### Voltage on the cells
+```c++
+packCellInfoStruct cellInfo;
+cellInfo = myBms.getCurrent();
+```
+This method return the packCellInfoStruct.
+Structure structure is presented below:
+```c++
+typedef struct packCellInfoStruct{
+  uint8_t NumOfCells;
+  uint16_t CellVoltage[15]; // Max 16 Cell BMS
+  uint16_t CellLow; // Minimal voltage in cells
+  uint16_t CellHigh; // Maximal voltage in cells
+  uint16_t CellDiff; // difference between highest and lowest
+  uint16_t CellAvg; // Average voltage in cells
+} packCellInfoStruct;
+```
+

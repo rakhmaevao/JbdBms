@@ -6,8 +6,6 @@ void setup()
 {
   Serial.begin(9600);
   Serial.println("JBD bms driver");
-
-  myBms.begin();
 }
 
 void loop()
