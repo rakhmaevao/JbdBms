@@ -5,59 +5,71 @@
  * \date September 2019
  */
 
-#include "jbdBms.h"
+#include "JbdBms.h"
 
-
-JbdBms::begin() {
+void JbdBms::begin()
+{
   m_serial.begin(9600);
 }
 
-bool JbdBms::readBmsData(){
+bool JbdBms::readBmsData()
+{
   uint8_t responce[BMS_LEN_RESPONCE];
 
   sendReqMessage();
   readResponce(responce);
 
-  if (checkCheckSumRecieve(responce) == true) {
+  if (checkCheckSumRecieve(responce) == true)
+  {
     parseTheMessage(responce);
-  } else {
+  }
+  else
+  {
     return false;
   }
   return true;
 }
 
-float JbdBms::getCurrent() {
+float JbdBms::getCurrent()
+{
   return m_current;
 }
 
-float JbdBms::getChargePercentage() {
+float JbdBms::getChargePercentage()
+{
   return m_chargePercentage;
 }
-uint16_t JbdBms::getProtectionState() {
+uint16_t JbdBms::getProtectionState()
+{
   return m_protectionState;
 }
 
-void JbdBms::sendReqMessage() {
-  uint8_t reqMessage[] = { 0xDDU, 0xA5, 0x03, 0x00, 0xFF, 0xFD, 0x77 };
+void JbdBms::sendReqMessage()
+{
+  uint8_t reqMessage[] = {0xDDU, 0xA5, 0x03, 0x00, 0xFF, 0xFD, 0x77};
   m_serial.write(reqMessage, 7);
 }
 
-bool JbdBms::readResponce(uint8_t * t_outMessage) {
+bool JbdBms::readResponce(uint8_t *t_outMessage)
+{
   uint8_t i = 0;
   bool findBeginByte = false;
   uint32_t statrTime = millis();
-  while (i <= BMS_LEN_RESPONCE - 1) {
-    if (abs((millis()-statrTime) > getMaxTimeout()))
+  while (i <= BMS_LEN_RESPONCE - 1)
+  {
+    if (abs((millis() - statrTime) > getMaxTimeout()))
     {
       return false;
     }
-    if (m_serial.available() > 0) {
+    if (m_serial.available() > 0)
+    {
       uint8_t thisByte = m_serial.read();
       if (thisByte == 0xDD)
       {
         findBeginByte = true;
       }
-      if (findBeginByte) {
+      if (findBeginByte)
+      {
         t_outMessage[i] = thisByte;
         i++;
       }
@@ -66,7 +78,8 @@ bool JbdBms::readResponce(uint8_t * t_outMessage) {
   return true;
 }
 
-void JbdBms::parseTheMessage(uint8_t * t_message) {
+void JbdBms::parseTheMessage(uint8_t *t_message)
+{
   m_current = ((t_message[6] << 8) | t_message[7]) * 10;
   m_chargePercentage = t_message[23];
   m_protectionState = (t_message[20] << 8) | t_message[21];
@@ -79,7 +92,8 @@ void JbdBms::parseTheMessage(uint8_t * t_message) {
  *  true - check passed;
  *  false - check not passed
  */
-bool JbdBms::checkCheckSumRecieve(uint8_t * t_message) {
+bool JbdBms::checkCheckSumRecieve(uint8_t *t_message)
+{
 
   uint16_t checkSumCompute;
   uint16_t checkSumAccepted;
@@ -90,8 +104,7 @@ bool JbdBms::checkCheckSumRecieve(uint8_t * t_message) {
   checkSumCompute = computeCrc16JbdChina(t_message, BMS_LEN_RESPONCE);
   startIndexCS = lengthData + 4;
 
-  checkSumAccepted = (t_message[startIndexCS] << 8)
-      | t_message[startIndexCS + 1];
+  checkSumAccepted = (t_message[startIndexCS] << 8) | t_message[startIndexCS + 1];
 
   if (checkSumCompute != checkSumAccepted)
     return false;
@@ -105,7 +118,8 @@ bool JbdBms::checkCheckSumRecieve(uint8_t * t_message) {
  * \param[in] usDataLen The quantity of bytes in the message buffer.
  * \return The function returns the CRC.
  */
-uint16_t JbdBms::computeCrc16JbdChina(uint8_t * puchMsg, uint8_t usDataLen) {
+uint16_t JbdBms::computeCrc16JbdChina(uint8_t *puchMsg, uint8_t usDataLen)
+{
   uint8_t lengthData = puchMsg[3];
 
   uint16_t summa = 0;
@@ -120,8 +134,10 @@ uint16_t JbdBms::computeCrc16JbdChina(uint8_t * puchMsg, uint8_t usDataLen) {
 /**
  * \brief   Сборка float из uint32_t
  */
-float JbdBms::converUint32ToFloat(uint32_t number) {
-  union DataType {
+float JbdBms::converUint32ToFloat(uint32_t number)
+{
+  union DataType
+  {
     float f;
     uint32_t uint32t;
   };
@@ -131,6 +147,7 @@ float JbdBms::converUint32ToFloat(uint32_t number) {
   return sample.f;
 }
 
-uint32_t JbdBms::getMaxTimeout(){
+uint32_t JbdBms::getMaxTimeout()
+{
   return 100;
 }

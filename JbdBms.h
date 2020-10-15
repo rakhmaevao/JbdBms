@@ -15,24 +15,24 @@
 /* \defgroup BMS_STATUS BMS protection status masks
 *  @{
 */
-#define BMS_STATUS_OK				0
-#define BMS_STATUS_CELL_OVP			1
-#define BMS_STATUS_CELL_UVP			2		///< Power off
-#define BMS_STATUS_PACK_OVP			4
-#define BMS_STATUS_PACK_UVP			8		///< Power off
-#define BMS_STATUS_CHG_OTP			16
-#define BMS_STATUS_CHG_UTP			32
-#define BMS_STATUS_DSG_OTP			64		///< Power off
-#define BMS_STATUS_DSG_UTP			128		///< Power off
-#define BMS_STATUS_CHG_OCP			256
-#define BMS_STATUS_DSG_OCP			512		///< Power off
-#define BMS_STATUS_SHORT_CIRCOUT	1024	///< Power off
-#define BMS_STATUS_AFE_ERROR		2048
-#define BMS_STATUS_SOFT_LOCK		4096
-#define BMS_STATUS_CHGOVERTIME		8192
-#define BMS_STATUS_DSGOVERTIME		16384	///< Power off
+#define BMS_STATUS_OK 0
+#define BMS_STATUS_CELL_OVP 1
+#define BMS_STATUS_CELL_UVP 2 ///< Power off
+#define BMS_STATUS_PACK_OVP 4
+#define BMS_STATUS_PACK_UVP 8 ///< Power off
+#define BMS_STATUS_CHG_OTP 16
+#define BMS_STATUS_CHG_UTP 32
+#define BMS_STATUS_DSG_OTP 64  ///< Power off
+#define BMS_STATUS_DSG_UTP 128 ///< Power off
+#define BMS_STATUS_CHG_OCP 256
+#define BMS_STATUS_DSG_OCP 512        ///< Power off
+#define BMS_STATUS_SHORT_CIRCOUT 1024 ///< Power off
+#define BMS_STATUS_AFE_ERROR 2048
+#define BMS_STATUS_SOFT_LOCK 4096
+#define BMS_STATUS_CHGOVERTIME 8192
+#define BMS_STATUS_DSGOVERTIME 16384 ///< Power off
 /* @} Power off errors 100011011001010 - 0x46CA*/
-#define BMS_POWER_OFF_ERRORS		0x46CA
+#define BMS_POWER_OFF_ERRORS 0x46CA
 
 /**
  * \brief Class for working with BMS, which are compatible with the program
@@ -47,20 +47,19 @@
  * Probability is that the update data in the BMS itself
  * occurs with a frequency (period) of 5 Hz (200 ms).
 */
-class JbdBms {
+class JbdBms
+{
 public:
+  JbdBms(int rx, int tx) : m_serial(rx, tx) {}
 
-  JbdBms(int rx,int tx):m_serial(rx,tx){}
-
-	begin();
+  void begin();
   bool readBmsData();
 
   float getCurrent();
-	float getChargePercentage();
-	uint16_t getProtectionState();
+  float getChargePercentage();
+  uint16_t getProtectionState();
 
 private:
-
   SoftwareSerial m_serial;
 
   float m_current = 0;
@@ -68,10 +67,10 @@ private:
   uint16_t m_protectionState = 0;
 
   void sendReqMessage();
-  bool readResponce(uint8_t * t_outMessage);
-  void parseTheMessage(uint8_t * t_message);
-  bool checkCheckSumRecieve(uint8_t * t_message);
-  uint16_t computeCrc16JbdChina(uint8_t * puchMsg, uint8_t usDataLen);
+  bool readResponce(uint8_t *t_outMessage);
+  void parseTheMessage(uint8_t *t_message);
+  bool checkCheckSumRecieve(uint8_t *t_message);
+  uint16_t computeCrc16JbdChina(uint8_t *puchMsg, uint8_t usDataLen);
   float converUint32ToFloat(uint32_t number);
 
   uint32_t getMaxTimeout();

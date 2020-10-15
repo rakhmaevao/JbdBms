@@ -1,6 +1,6 @@
-#include "JbdBms.hpp"
+#include "JbdBms.h"
 
-JbdBms myBms(6,7); // RX, TX
+JbdBms myBms(6, 7); // RX, TX
 
 void setup()
 {
@@ -12,13 +12,18 @@ void setup()
 
 void loop()
 {
-  if (myBms.readBmsData()== true)
+  if (myBms.readBmsData() == true)
   {
-    Serial.print("This capacity: "); Serial.println(myBms.getChargePercentage());
-    Serial.print("This current: "); Serial.println(myBms.getCurrent());
-    Serial.print("Protection state: ");Serial.println(myBms.getProtectionState());
+    Serial.print("This capacity: ");
+    Serial.println(myBms.getChargePercentage());
+    Serial.print("This current: ");
+    Serial.println(myBms.getCurrent());
+    Serial.print("Protection state: ");
+    Serial.println(myBms.getProtectionState());
     Serial.println();
-  } else {
+  }
+  else
+  {
     Serial.println("Communication error");
   }
   delay(1000);
