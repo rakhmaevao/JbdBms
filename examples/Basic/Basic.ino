@@ -1,4 +1,4 @@
-#include "JbdBms.hpp"
+#include "JbdBms.h"
 
 JbdBms myBms(6,7); // RX, TX
 
@@ -6,8 +6,6 @@ void setup()
 {
   Serial.begin(9600);
   Serial.println("JBD bms driver");
-
-  myBms.begin();
 }
 
 void loop()
