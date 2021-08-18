@@ -265,3 +265,24 @@ uint16_t JbdBms::two_ints_into16(int highbyte, int lowbyte) // turns two bytes i
   a16bitvar = (a16bitvar | lowbyte); //OR operation, merge the two
   return a16bitvar;
 }
+
+JbdBmsWithSn75176::JbdBmsWithSn75176(HardwareSerial *t_hardwareSerial, int controlPin) : JbdBms(t_hardwareSerial), m_controlPin(controlPin)
+{
+  controlPinInit();
+}
+
+JbdBmsWithSn75176::JbdBmsWithSn75176(SoftwareSerial *t_softwareSerial, int controlPin) : JbdBms(t_softwareSerial), m_controlPin(controlPin)
+{
+  controlPinInit();
+}
+
+JbdBmsWithSn75176::JbdBmsWithSn75176(int rx, int tx, int controlPin) : JbdBms(rx, tx), m_controlPin(controlPin)
+{
+  controlPinInit();
+}
+
+void JbdBmsWithSn75176::controlPinInit()
+{
+  pinMode(m_controlPin, OUTPUT);
+  digitalWrite(m_controlPin, HIGH);
+}

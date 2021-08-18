@@ -73,7 +73,7 @@ public:
   float getTemp2();
   packCellInfoStruct getPackCellInfo();
 
-private:
+protected:
   Stream *m_port;
   bool m_hwserial;
   float m_voltage = 0;
@@ -102,4 +102,16 @@ private:
   uint32_t getMaxTimeout();
 };
 
+class JbdBmsWithSn75176 : public JbdBms
+{
+public:
+  JbdBmsWithSn75176(HardwareSerial *t_hardwareSerial, int controlPin);
+  JbdBmsWithSn75176(SoftwareSerial *t_softwareSerial, int controlPin);
+  JbdBmsWithSn75176(int rx, int tx, int controlPin);
+
+private:
+  int m_controlPin;
+
+  void controlPinInit();
+};
 #endif /* JBD_BMS_HPP_ */
