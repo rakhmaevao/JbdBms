@@ -1,23 +1,29 @@
-# JbdBms library for Arduino v0.2
+= JbdBms library for Arduino 1.0
 
 This is a library for working with battery manager system JBD.
 If you can configure your BMS trough the JBDTool, then this code will suit you.
 See [my project in hack a day](https://hackaday.io/project/162806-jbd-bms-protocol).
 
-## Hardware
+The library allows you to communicate with the bms directly or through an RS485 chip for SN75176.
+
+== Hardware
 
 Connect UART pins to an Arduino board DIGITAL pins:
-* RX
-* TX
-* GND
+- RX
+- TX
+- GND
 
-Attention! UART GND circuit is electrically isolated from the power GND BMS.
+IMPORTANT: UART GND circuit is electrically isolated from the power GND BMS.
 
-## Usage
+NOTE: If you are using RS485, then also connect `CONTROL_PIN` (`/RE` and `DE` pins) to any digital pin of Arduino.
 
-### Initialization
+== Usage
 
-```c++
+=== Initialization
+
+.BMS is directly connected
+[source, c++]
+----
 #include "JbdBms.hpp"
 
 JbdBms myBms(6,7); // RX, TX
@@ -26,41 +32,61 @@ void setup()
 {
   myBms.begin();
 }
-```
-### Reading basic data from BMS
+----
 
-```c++
+.BMS is connected via SN75176
+[source, c++]
+----
+#include "JbdBms.hpp"
+
+JbdBmsWithSn75176 myBms(6,7, 4); // RX, TX, CONTROL_PIN
+
+void setup()
+{
+  myBms.begin();
+}
+----
+
+=== Reading basic data from BMS
+
+[source, c++]
+----
 if (myBms.readBmsData()== true)
 {
   // use the get-functions
 }
-```
-After calling `readBmsData ()` request is sent to the BMS.
-In case of a successful read response, the method returns `true`.
+----
 
-You can work with the data obtained using the get-functions: getChargePercentage(), getCurrent(), getProtectionState().
+After calling `+readBmsData ()+` request is sent to the BMS.
+In case of a successful read response, the method returns `+true+`.
 
-### Get-functions
-#### Charge percentage
-```c++
+You can work with the data obtained using the get-functions: `getChargePercentage()`, `getCurrent()`, `getProtectionState()` ...
+
+=== Get-functions
+==== Charge percentage
+[source, c++]
+----
 myBms.getChargePercentage();
-```
+----
 This method return the float value.
 
-#### Consumption current
-```c++
+==== Consumption current
+[source, c++]
+----
 myBms.getCurrent();
-```
+----
 This method return the float value.
 
-#### Protection state
-```c++
+==== Protection state
+[source, c++]
+----
 myBms.getProtectionState();
-```
+----
 This method return the uint16_t value.
 
 If this value is not 0, then BMS detected some errors. You can check this value on the mask by using the following error values:
-```c++
+[source, c++]
+----
 #define BMS_STATUS_OK				0
 #define BMS_STATUS_CELL_OVP			1
 #define BMS_STATUS_CELL_UVP			2		///< Power off
@@ -78,44 +104,49 @@ If this value is not 0, then BMS detected some errors. You can check this value 
 #define BMS_STATUS_CHGOVERTIME		8192
 #define BMS_STATUS_DSGOVERTIME		16384	///< Power off
 #define BMS_POWER_OFF_ERRORS		0x46CA
-```
+----
 Some errors lead to power down (labeled "Power off"). If you want to read them a device that is powered from the battery, it will not work.
 
-### Cycle counter
-```c++
+==== Cycle counter
+[source, c++]
+----
 int cycleCount = myBms.getCycle();
-```
+----
 This method return the integer value.
 
-### Data from temperature sensors
+==== Data from temperature sensors
 Depending on your BMS, the sensor can be located either on the board or be external.
 Find it out empirically.
-```c++
+[source, c++]
+----
 float temp1 = myBms.getTemp1();
 float temp2 = myBms.getTemp2();
-```
+----
 
-### Reading voltage on the cells
+=== Reading voltage on the cells
 
-```c++
+[source, c++]
+----
 if (myBms.readPackData()== true)
 {
   // use the get-functions
 }
-```
+----
 After calling `readPackData ()` request is sent to the BMS.
 In case of a successful read response, the method returns `true`.
 
 You can work with the data obtained using the get-function getPackCellInfo().
 
-#### Voltage on the cells
-```c++
+==== Voltage on the cells
+[source, c++]
+----
 packCellInfoStruct cellInfo;
-cellInfo = myBms.getCurrent();
-```
+cellInfo = myBms.getPackCellInfo();
+----
 This method return the packCellInfoStruct.
 Structure structure is presented below:
-```c++
+[source, c++]
+----
 typedef struct packCellInfoStruct{
   uint8_t NumOfCells;
   uint16_t CellVoltage[15]; // Max 16 Cell BMS
@@ -124,5 +155,5 @@ typedef struct packCellInfoStruct{
   uint16_t CellDiff; // difference between highest and lowest
   uint16_t CellAvg; // Average voltage in cells
 } packCellInfoStruct;
-```
+----
 

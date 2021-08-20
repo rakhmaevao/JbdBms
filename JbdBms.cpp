@@ -1,8 +1,5 @@
 /*
  * \brief Source file for JbdBms class
- * \author rahmaevao and boboxx
- * \version 0.3
- * \date September 2019
  */
 
 #include "JbdBms.h"

@@ -1,8 +1,5 @@
 /*
  * \brief Header file for JbdBms class
- * \author rahmaevao
- * \version 0.3
- * \date September 2019
  */
 
 #ifndef JBD_BMS_HPP_

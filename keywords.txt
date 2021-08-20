@@ -2,7 +2,7 @@
 # Datatypes (KEYWORD1)
 #######################################
 JbdBms	KEYWORD1
-tm1637	KEYWORD1
+JbdBmsWithSn75176 KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
