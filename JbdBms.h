@@ -109,9 +109,14 @@ public:
   JbdBmsWithSn75176(SoftwareSerial *t_softwareSerial, int controlPin);
   JbdBmsWithSn75176(int rx, int tx, int controlPin);
 
+  void sendReqBasicMessage();
+  void sendCellMessage();
+
 private:
   int m_controlPin;
 
   void controlPinInit();
+  void setModeTransmit();
+  void setModeReceive();
 };
 #endif /* JBD_BMS_HPP_ */

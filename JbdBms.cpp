@@ -284,5 +284,31 @@ JbdBmsWithSn75176::JbdBmsWithSn75176(int rx, int tx, int controlPin) : JbdBms(rx
 void JbdBmsWithSn75176::controlPinInit()
 {
   pinMode(m_controlPin, OUTPUT);
+  setModeReceive();
+}
+
+void JbdBmsWithSn75176::setModeTransmit()
+{
+  digitalWrite(m_controlPin, LOW);
+}
+
+void JbdBmsWithSn75176::setModeReceive()
+{
   digitalWrite(m_controlPin, HIGH);
+}
+
+void JbdBmsWithSn75176::sendReqBasicMessage()
+{
+  setModeTransmit();
+  JbdBms::sendReqBasicMessage();
+  m_port->flush();
+  setModeReceive();
+}
+
+void JbdBmsWithSn75176::sendCellMessage()
+{
+  setModeTransmit();
+  JbdBms::sendCellMessage();
+  m_port->flush();
+  setModeReceive();
 }
