@@ -118,12 +118,14 @@ void JbdBms::sendReqBasicMessage()
 {
   uint8_t reqMessage[] = {0xDD, 0xA5, 0x03, 0x00, 0xFF, 0xFD, 0x77};
   m_port->write(reqMessage, 7);
+  m_port->flush();
 }
 
 void JbdBms::sendCellMessage()
 {
   uint8_t reqMessage[] = {0xDD, 0xA5, 0x04, 0x00, 0xFF, 0xFC, 0x77};
   m_port->write(reqMessage, 7);
+  m_port->flush();
 }
 
 void JbdBms::parseReqBasicMessage(uint8_t *t_message)
@@ -298,7 +300,6 @@ void JbdBmsWithSn75176::sendReqBasicMessage()
 {
   setModeTransmit();
   JbdBms::sendReqBasicMessage();
-  m_port->flush();
   setModeReceive();
 }
 
@@ -306,6 +307,5 @@ void JbdBmsWithSn75176::sendCellMessage()
 {
   setModeTransmit();
   JbdBms::sendCellMessage();
-  m_port->flush();
   setModeReceive();
 }
