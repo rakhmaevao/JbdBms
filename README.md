@@ -111,7 +111,7 @@ You can work with the data obtained using the get-function getPackCellInfo().
 #### Voltage on the cells
 ```c++
 packCellInfoStruct cellInfo;
-cellInfo = myBms.getCurrent();
+cellInfo = myBms.getPackCellInfo();
 ```
 This method return the packCellInfoStruct.
 Structure structure is presented below:
