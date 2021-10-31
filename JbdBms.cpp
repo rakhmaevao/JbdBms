@@ -116,6 +116,9 @@ void JbdBms::sendCellMessage() {
 void JbdBms::parseReqBasicMessage(uint8_t * t_message) {
   m_voltage = (float)two_ints_into16(t_message[4], t_message[5])/100;
   m_current = ((float)two_ints_into16(t_message[6], t_message[7])) * 10;
+  if ( m_current > 327675) { // discharge must be negative
+    m_current = m_current - 655350;
+  }
   m_chargePercentage = t_message[23];
   m_protectionState = ((float)two_ints_into16(t_message[20], t_message[21]));
   m_cycle = ((float)two_ints_into16(t_message[12], t_message[13]));
