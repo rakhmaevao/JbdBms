@@ -99,7 +99,8 @@ private:
   bool checkCheckSumRecieve(uint8_t * t_message);
   uint16_t computeCrc16JbdChina(uint8_t * puchMsg, uint8_t usDataLen);
   float converUint32ToFloat(uint32_t number);
-  uint16_t two_ints_into16(int highbyte, int lowbyte);
+  uint16_t convertTwoIntsToUint16(int highbyte, int lowbyte);
+  int16_t convertTwoIntsToInt16(int highbyte, int lowbyte);
 
   uint32_t getMaxTimeout();
 };

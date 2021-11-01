@@ -114,16 +114,13 @@ void JbdBms::sendCellMessage() {
 }
 
 void JbdBms::parseReqBasicMessage(uint8_t * t_message) {
-  m_voltage = (float)two_ints_into16(t_message[4], t_message[5])/100;
-  m_current = ((float)two_ints_into16(t_message[6], t_message[7])) * 10;
-  if ( m_current > 327675) { // discharge must be negative
-    m_current = m_current - 655350;
-  }
+  m_voltage = (float)convertTwoIntsToUint16(t_message[4], t_message[5])/100;
+  m_current = ((float)convertTwoIntsToInt16(t_message[6], t_message[7])) * 10;
   m_chargePercentage = t_message[23];
-  m_protectionState = ((float)two_ints_into16(t_message[20], t_message[21]));
-  m_cycle = ((float)two_ints_into16(t_message[12], t_message[13]));
-  m_Temp1 = (((float)two_ints_into16(t_message[27], t_message[28])) - 2731) / 10.00f;
-  m_Temp2 = (((float)two_ints_into16(t_message[29], t_message[30])) - 2731) / 10.00f;
+  m_protectionState = ((float)convertTwoIntsToUint16(t_message[20], t_message[21]));
+  m_cycle = ((float)convertTwoIntsToUint16(t_message[12], t_message[13]));
+  m_Temp1 = (((float)convertTwoIntsToUint16(t_message[27], t_message[28])) - 2731) / 10.00f;
+  m_Temp2 = (((float)convertTwoIntsToUint16(t_message[29], t_message[30])) - 2731) / 10.00f;
   
 }
 
@@ -137,7 +134,7 @@ void JbdBms::parseReqPackMessage(uint8_t * t_message){ //packCellInfoStruct * t_
   byte offset = 4;
   for (byte i = 0; i < m_packCellInfo.NumOfCells; i++)
   {
-    m_packCellInfo.CellVoltage[i] = ((uint16_t)two_ints_into16(t_message[i * 2 + offset], t_message[i * 2 + 1 + offset])); //Data length * 2 is number of cells !!!!!!
+    m_packCellInfo.CellVoltage[i] = ((uint16_t)convertTwoIntsToUint16(t_message[i * 2 + offset], t_message[i * 2 + 1 + offset])); //Data length * 2 is number of cells !!!!!!
 
     _cellSum += m_packCellInfo.CellVoltage[i];
 
@@ -241,10 +238,21 @@ uint32_t JbdBms::getMaxTimeout(){
   return 100;
 }
 
+int16_t JbdBms::convertTwoIntsToInt16(int highbyte, int lowbyte) {
+    int16_t value = convertTwoIntsToUint16(highbyte, lowbyte);
+    if (value & 0b1000000000000000)  // Test for positive / negative with bit mask
+    {
+        value = ~ value;
+        value = value * -1;
+    }
+    return value;
+}
+
+
 /**
  * \brief Build one uint16_t out of two uint8_t
  */
-uint16_t JbdBms::two_ints_into16(int highbyte, int lowbyte) // turns two bytes into a single long integer
+uint16_t JbdBms::convertTwoIntsToUint16(int highbyte, int lowbyte) // turns two bytes into a single long integer
 {
   uint16_t a16bitvar = (highbyte);
   a16bitvar <<= 8; //Left shift 8 bits,
