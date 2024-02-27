@@ -179,6 +179,7 @@ bool JbdBms::readResponce(uint8_t *t_outMessage)
         t_outMessage[i] = thisByte;
         i++;
       }
+      statrTime = millis();
     }
   }
   return true;
