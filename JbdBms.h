@@ -11,7 +11,7 @@
 #include "Arduino.h"
 #include <SoftwareSerial.h>
 
-#define BMS_LEN_RESPONCE 34
+#define BMS_LEN_RESPONCE 42
 /* \defgroup BMS_STATUS BMS protection status masks
 *  @{
 */
