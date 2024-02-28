@@ -160,6 +160,7 @@ bool JbdBms::readResponce(uint8_t *t_outMessage)
   uint8_t i = 0;
   bool findBeginByte = false;
   uint32_t statrTime = millis();
+  uint8_t thisByte;
   while (i <= BMS_LEN_RESPONCE - 1)
   {
     if (abs((millis() - statrTime) > getMaxTimeout()))
@@ -168,7 +169,7 @@ bool JbdBms::readResponce(uint8_t *t_outMessage)
     }
     if (m_port->available() > 0) {
     // if (Serial2.available() > 0) {
-      uint8_t thisByte = m_port->read();
+      thisByte = m_port->read();
       // uint8_t thisByte = Serial2.read();
       if (thisByte == 0xDD)
       {
